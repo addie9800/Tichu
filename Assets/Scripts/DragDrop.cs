@@ -1,19 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class DragDrop : MonoBehaviour
+public class DragDrop : NetworkBehaviour
 {
     public GameObject Canvas;
+    public GameObject DropZone;
+    public PlayerManager PlayerManager;
+
     private bool isDragging = false;
     private Vector2 startPosition;
+    private bool isDraggable = true;
     private bool isOverDropZone = false;
     private GameObject startParent;
-    private GameObject DropZone;
+    private GameObject dropZone;
 
-    private void Awake()
+    private void Start()
     {
         Canvas = GameObject.Find("Main Canvas");
+        DropZone = GameObject.Find("DropZone");
+        if (!isOwned)
+        {
+            isDraggable = false;
+        }
     }
 
     void Update()
@@ -28,16 +38,17 @@ public class DragDrop : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         isOverDropZone = true;
-        DropZone = collision.gameObject;
+        dropZone = collision.gameObject;
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
         isOverDropZone = false;
-        DropZone = null;
+        dropZone = null;
     }
 
     public void StartDrag()
     {
+        if (!isDraggable) return;
         startPosition = transform.position;
         startParent = transform.parent.gameObject;
         isDragging = true;
@@ -45,10 +56,15 @@ public class DragDrop : MonoBehaviour
 
     public void EndDrag()
     {
+        if (!isDraggable) return;
         isDragging = false;
         if (isOverDropZone)
         {
-            transform.SetParent(DropZone.transform, false);
+            transform.SetParent(dropZone.transform, false);
+            isDraggable = false;
+            NetworkIdentity networkIdentity = NetworkClient.connection.identity;
+            PlayerManager = networkIdentity.GetComponent<PlayerManager>();
+            PlayerManager.PlayCard(gameObject);
         }
         else
         {
