@@ -95,7 +95,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 640f4465ed026024d8362f005cc7b07b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   Canvas: {fileID: 0}
+  DropZone: {fileID: 0}
+  PlayerManager: {fileID: 0}
 --- !u!114 &-5592403512113585487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,6 +203,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Canvas: {fileID: 0}
+  zoom: {fileID: 344745120122987103, guid: e6ce2b2c0f086b24287b046dbceba61f, type: 3}
 --- !u!61 &3371316991971217034
 BoxCollider2D:
   m_ObjectHideFlags: 0
